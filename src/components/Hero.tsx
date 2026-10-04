@@ -1,6 +1,6 @@
 import { profile, links } from '../data'
 import SocialIcon, { type SocialPlatform } from './SocialIcon'
-import heroPortrait from './WebBG_of_Senjai.png'
+import Portrait from './Portrait'
 export function Social({ className = '' }: { className?: string }) {
   const items: { platform: SocialPlatform; href: string; label: string }[] = [
     { platform: 'github', href: links.github, label: 'GitHub profile' },
@@ -8,7 +8,7 @@ export function Social({ className = '' }: { className?: string }) {
     { platform: 'facebook', href: links.facebook, label: 'Facebook profile' },
     { platform: 'instagram', href: links.instagram, label: 'Instagram profile' },
     { platform: 'tiktok', href: links.tiktok, label: 'TikTok profile' },
-    { platform: 'email', href: links.gmail, label: 'Open Gmail inbox' },
+    { platform: 'email', href: `mailto:${links.email}`, label: 'Email Chinjay' },
   ]
   return (
     <ul className={`flex flex-wrap gap-3 ${className}`}>
@@ -18,12 +18,7 @@ export function Social({ className = '' }: { className?: string }) {
 }
 export default function Hero() {
   return (<section id="home" className="relative isolate min-h-[100svh] flex flex-col items-center justify-center overflow-hidden px-5 sm:px-8 pt-24 pb-20">
-    <img
-      src={heroPortrait}
-      alt=""
-      aria-hidden="true"
-      className="pointer-events-none absolute right-[-18vw] bottom-0 z-0 h-[44svh] max-h-[420px] w-auto max-w-none object-contain object-bottom opacity-20 sm:right-[-4vw] sm:h-[72svh] sm:max-h-[520px] sm:opacity-50 lg:right-[7vw] lg:top-1/2 lg:bottom-auto lg:h-[88svh] lg:max-h-[820px] lg:-translate-y-1/2 lg:opacity-100"
-    />
+    <Portrait className="pointer-events-none absolute right-[-18vw] bottom-0 z-0 opacity-20 sm:right-[-4vw] sm:h-[72svh] sm:max-h-[520px] sm:opacity-50 lg:right-[7vw] lg:top-1/2 lg:bottom-auto lg:h-[88svh] lg:max-h-[820px] lg:-translate-y-1/2 lg:opacity-100" />
     <div className="relative z-10 mx-auto max-w-6xl w-full">
       <p className="inline-flex items-center gap-2 rounded-full border border-line bg-surface/60 px-4 py-1.5 text-xs sm:text-sm text-mute"><span className="w-1.5 h-1.5 rounded-full bg-accent" />Computer Science Student</p>
       <h1 className="name-gradient mt-6 text-[clamp(2.35rem,7vw,5rem)] leading-[1.08]">{profile.name}</h1>

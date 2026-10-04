@@ -11,6 +11,6 @@ export default function Resume() {
           <a className="btn btn-primary" href={links.resumePdf || resumeImage} download>Download CV</a>
         </div>
       </div>
-      <img src={resumeImage} alt="Resume of Chinjay D. Arbois" className="mt-8 mx-auto w-full max-w-4xl rounded-xl border border-line" />
+      <img src={resumeImage} alt="Resume of Chinjay D. Arbois" loading="lazy" decoding="async" className="mt-8 mx-auto w-full max-w-4xl rounded-xl border border-line" />
     </div></Reveal></Section>)
 }

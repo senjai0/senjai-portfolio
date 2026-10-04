@@ -51,6 +51,8 @@ function SchoolPreview({ school }: { school: SchoolId }) {
         <img
           src={preview.image}
           alt={preview.alt}
+          loading="lazy"
+          decoding="async"
           className="h-full w-full object-contain transition-transform duration-500 group-hover:scale-[1.015]"
         />
         <span className="absolute left-3 top-3 inline-flex items-center gap-2 rounded-full border border-white/15 bg-bg/75 px-3 py-1.5 text-xs font-medium text-white shadow-lg backdrop-blur">
@@ -61,13 +63,13 @@ function SchoolPreview({ school }: { school: SchoolId }) {
           School location
         </span>
       </a>
-      <div className="flex flex-wrap items-center justify-between gap-3 p-4 sm:p-5">
-        <p className="min-w-0 flex-1 break-words text-sm font-medium text-ink">{preview.alt}</p>
+      <div className="flex flex-col gap-3 p-4 sm:flex-row sm:items-center sm:justify-between sm:p-5">
+        <p className="min-w-0 break-words text-sm font-medium leading-relaxed text-ink sm:flex-1">{preview.alt}</p>
         <a
           href={mapsUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex min-h-10 shrink-0 items-center gap-2 rounded-lg border border-accent/30 bg-accent/10 px-3 py-2 text-sm font-medium text-hi transition-colors hover:border-accent/60 hover:bg-accent/20"
+          className="inline-flex min-h-11 w-full shrink-0 items-center justify-center gap-2 rounded-lg border border-accent/30 bg-accent/10 px-3 py-2 text-sm font-medium text-hi transition-colors hover:border-accent/60 hover:bg-accent/20 sm:w-auto"
         >
           View on Google Maps <span aria-hidden="true">↗</span>
         </a>

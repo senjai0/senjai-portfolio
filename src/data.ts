@@ -37,24 +37,25 @@ export const profile = {
 }
 export const links = {
   email: 'arboischinjay@gmail.com',
-  gmail: 'https://mail.google.com/mail/u/2/#inbox',
   github: 'https://github.com/senjai0',
   linkedin: 'https://www.linkedin.com/in/chinjay-arbois-20671b2bb/',
   facebook: 'https://www.facebook.com/senjai.arbois30',
   instagram: 'https://www.instagram.com/snjaii.a/',
   tiktok: 'https://www.tiktok.com/@user73940282838483882839',
-  resumePdf: '',
-} // e.g. resumePdf: '/resume.pdf' (put file in /public)
+  resumePdf: '/resume.pdf',
+} // Resume PDF is served from public/resume.pdf.
 export const nav = ['Home', 'About', 'Skills', 'Projects', 'Education', 'Contact']
-export const skillGroups: { title: string; items: [string, string][] }[] = [
-  { title: 'Programming Languages', items: [['HTML','Intermediate'],['CSS','Intermediate'],['JavaScript','Beginner'],['TypeScript','Beginner'],['Python','Intermediate'],['Java','Beginner'],['C/C++','Beginner'],['PHP','Beginner'],['SQL','Intermediate']] },
-  { title: 'Frontend & Backend', items: [['React','Beginner'],['Django','Beginner/Intermediate'],['Django REST Framework','Beginner'],['REST API Development','Beginner'],['Git','Beginner/Intermediate'],['GitHub','Beginner/Intermediate'],['Responsive Web Development','Intermediate'],['Basic UI/UX','Beginner/Intermediate']] },
-  { title: 'Databases', items: [['PostgreSQL','Intermediate'],['MySQL','Intermediate'],['Firebase/Firestore','Beginner'],['Database Design','Beginner/Intermediate']] },
-  { title: 'Tools & Other Skills', items: [['Cisco Packet Tracer / Networking','Beginner/Intermediate'],['Basic AI Integration','Beginner'],['AI-assisted Development','Intermediate'],['Technical Documentation','Intermediate'],['Basic UI Design','Beginner'],['Video Editing','Beginner']] },
+export const skillGroups: { title: string; items: string[] }[] = [
+  { title: 'Programming Languages', items: ['JavaScript', 'TypeScript', 'Python', 'Java', 'C/C++', 'PHP'] },
+  { title: 'Frontend & UI/UX', items: ['HTML', 'CSS', 'React', 'Responsive Web Development', 'Basic UI/UX', 'Basic UI Design'] },
+  { title: 'Backend & APIs', items: ['Django', 'Django REST Framework', 'REST API Development'] },
+  { title: 'Databases', items: ['SQL', 'PostgreSQL', 'MySQL', 'Firebase/Firestore', 'Database Design'] },
+  { title: 'Tools & Platforms', items: ['Git', 'GitHub', 'Cisco Packet Tracer / Networking', 'Basic AI Integration', 'AI-assisted Development', 'Technical Documentation', 'Video Editing'] },
 ]
 const codeHubProject = {
   name: 'CCIS-CodeHub',
   category: 'Thesis Project',
+  role: 'Student Software Developer',
   liveUrl: 'https://ccis-codehub.space/',
   sourceUrl: '',
   screenshots: [
@@ -82,6 +83,7 @@ const codeHubProject = {
 const laundryProProject = {
   name: 'LaundryPro',
   category: 'Laundry Management System',
+  role: 'Application Developer',
   liveUrl: '',
   sourceUrl: '',
   screenshots: [
@@ -95,7 +97,7 @@ const laundryProProject = {
   ],
   thesis: '',
   description: 'LaundryPro is a web-based laundry management system designed to simplify and organize laundry service operations. It provides a centralized interface for managing laundry orders, customer information, service status, and other essential operational tasks, helping make the laundry workflow more organized and efficient.',
-  stack: [],
+  stack: ['HTML', 'CSS', 'JavaScript', 'PHP', 'MySQL'],
   features: ['Laundry order management', 'Customer information management', 'Service status tracking', 'Operational tools for laundry teams'],
   details: [
     ['Overview', 'LaundryPro is a web-based laundry management system designed to simplify and organize laundry service operations. It provides a centralized interface for managing laundry orders, customer information, service status, and other essential operational tasks, helping make the laundry workflow more organized and efficient.'],
@@ -106,6 +108,7 @@ const laundryProProject = {
 const trendoraProject = {
   name: 'Trendora - Apparel',
   category: 'Apparel E-commerce',
+  role: 'Application Developer',
   liveUrl: '',
   sourceUrl: '',
   screenshots: [
@@ -118,17 +121,18 @@ const trendoraProject = {
     { src: trendoraCartScreenshot, alt: 'Trendora shopping cart' },
   ],
   thesis: '',
-  description: 'Trendora is an apparel project. Project description and technology details can be added here.',
-  stack: [],
+  description: 'Trendora is an apparel e-commerce project with product collections, product selection, a shopping cart, order management, and rewards.',
+  stack: ['HTML', 'CSS', 'JavaScript', 'PHP', 'MySQL'],
   features: ['Apparel shop and collections', 'Order management', 'Rewards', 'Product selection and cart'],
   details: [
-    ['Overview', 'Trendora - Apparel project details are being prepared. Replace this overview, features, and technology list with the final project information.'],
+    ['Overview', 'Trendora is an apparel e-commerce project with product collections, product selection, a shopping cart, order management, and rewards.'],
   ] as [string, string][],
 }
 
 const snsMemoryKeeperProject = {
   name: 'SNSU Memory Keeper',
   category: 'School Memory & Information Platform',
+  role: 'Application Developer',
   liveUrl: '',
   sourceUrl: '',
   screenshots: [
@@ -144,7 +148,7 @@ const snsMemoryKeeperProject = {
   ],
   thesis: '',
   description: 'SNSU Memory Keeper is a digital school memory and information platform designed to organize and preserve student and school community records. It provides a centralized space for managing student information, faculty and staff records, courses, graduation tracking, birthdays, memories, and yearbook-related content.',
-  stack: [],
+  stack: ['HTML', 'CSS', 'JavaScript', 'PHP', 'MySQL'],
   features: ['Student management', 'Faculty and staff records', 'Course information', 'Graduation tracking', 'Memory wall', 'Birthday records', 'Yearbook features'],
   details: [
     ['Overview', 'SNSU Memory Keeper is a centralized digital platform created to organize and preserve important school-related information and memories. The system includes a dashboard, student management, faculty and staff records, course information, graduation tracking, memory wall, birthday records, and yearbook features. It is designed to provide an organized and accessible digital space for managing school information and preserving memories of the SNSU community.'],

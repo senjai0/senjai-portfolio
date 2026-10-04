@@ -16,20 +16,46 @@ function ScreenshotCarousel({
 }) {
   const [previewOpen, setPreviewOpen] = useState(false)
   const closePreviewButton = useRef<HTMLButtonElement>(null)
+  const previewDialog = useRef<HTMLDivElement>(null)
   const activeScreenshot = screenshots[activeIndex]
   const hasMultiple = screenshots.length > 1
   const changeSlide = (direction: number) => {
     onActiveIndexChange((activeIndex + direction + screenshots.length) % screenshots.length)
   }
+  const changeSlideRef = useRef(changeSlide)
+  useEffect(() => { changeSlideRef.current = changeSlide }, [changeSlide])
 
   useEffect(() => {
     if (!previewOpen) return
     const previousFocus = document.activeElement as HTMLElement | null
     const previousOverflow = document.body.style.overflow
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') setPreviewOpen(false)
-      if (event.key === 'ArrowLeft' && hasMultiple) changeSlide(-1)
-      if (event.key === 'ArrowRight' && hasMultiple) changeSlide(1)
+      if (event.key === 'Escape') {
+        setPreviewOpen(false)
+        return
+      }
+      if (event.key === 'ArrowLeft' && hasMultiple) changeSlideRef.current(-1)
+      if (event.key === 'ArrowRight' && hasMultiple) changeSlideRef.current(1)
+      if (event.key !== 'Tab') return
+      const container = previewDialog.current
+      if (!container) return
+      const focusable = Array.from(container.querySelectorAll<HTMLElement>(
+        'button:not([disabled]), a[href], [tabindex]:not([tabindex="-1"])',
+      ))
+      if (focusable.length === 0) {
+        event.preventDefault()
+        container.focus()
+        return
+      }
+      const first = focusable[0]
+      const last = focusable[focusable.length - 1]
+      if (event.shiftKey && (document.activeElement === first || !container.contains(document.activeElement))) {
+        event.preventDefault()
+        last.focus()
+      } else if (!event.shiftKey && (document.activeElement === last || !container.contains(document.activeElement))) {
+        event.preventDefault()
+        first.focus()
+      }
     }
     document.body.style.overflow = 'hidden'
     addEventListener('keydown', handleKeyDown)
@@ -37,9 +63,9 @@ function ScreenshotCarousel({
     return () => {
       document.body.style.overflow = previousOverflow
       removeEventListener('keydown', handleKeyDown)
-      previousFocus?.focus()
+      if (previousFocus?.isConnected) previousFocus.focus()
     }
-  }, [previewOpen, hasMultiple, activeIndex])
+  }, [previewOpen, hasMultiple])
 
   if (!activeScreenshot) return null
 
@@ -56,6 +82,8 @@ function ScreenshotCarousel({
             key={`${activeIndex}-${activeScreenshot.src}`}
             src={activeScreenshot.src}
             alt={activeScreenshot.alt}
+            loading="lazy"
+            decoding="async"
             className="h-full w-full object-contain animate-[screenshot-enter_.24s_ease-out]"
           />
           <span className="absolute inset-0 grid place-items-center bg-bg/0 text-sm font-medium text-white opacity-0 transition-[background-color,opacity] duration-200 group-hover:bg-bg/25 group-hover:opacity-100 group-focus-within:bg-bg/25 group-focus-within:opacity-100">
@@ -96,10 +124,12 @@ function ScreenshotCarousel({
         ))}
       </div>}
       {previewOpen && <div
+        ref={previewDialog}
         className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 p-4 backdrop-blur-sm sm:p-8"
         role="dialog"
         aria-modal="true"
         aria-label="Screenshot preview"
+        tabIndex={-1}
         onClick={() => setPreviewOpen(false)}
       >
         <button
@@ -165,14 +195,8 @@ export default function Projects() {
 
   return (<Section id="projects" eyebrow="Featured Project" title="Thesis & Projects">
     <Reveal>
-      <div className="flex min-w-0 items-center gap-2 sm:gap-4">
-        <button
-          type="button"
-          onClick={() => changeProject(-1)}
-          aria-label={`Previous project: ${projects[(activeProjectIndex - 1 + projects.length) % projects.length].name}`}
-          className="grid h-11 w-11 shrink-0 place-items-center rounded-full border border-white/15 bg-surface/70 text-2xl text-white/85 shadow-lg transition hover:border-accent/60 hover:bg-surface hover:text-white focus-visible:outline-offset-2 sm:h-14 sm:w-14 sm:text-3xl"
-        >&lt;</button>
-        <article key={activeProject.name} className="card min-w-0 flex-1 animate-[screenshot-enter_.24s_ease-out] overflow-hidden grid lg:grid-cols-2">
+      <div className="grid min-w-0 grid-cols-1 gap-3 lg:grid-cols-[56px_minmax(0,1fr)_56px] lg:items-center lg:gap-4">
+        <article key={activeProject.name} className="card min-w-0 animate-[screenshot-enter_.24s_ease-out] overflow-hidden grid lg:col-start-2 lg:row-start-1 lg:grid-cols-2">
           <div className="min-w-0 bg-bg/40 p-4 sm:p-6 lg:p-8">
             <ScreenshotCarousel
               screenshots={activeProject.screenshots}
@@ -185,6 +209,7 @@ export default function Projects() {
               <p className="mb-2 text-xs font-semibold uppercase tracking-wider text-accent">{activeProject.category}</p>
               <h3 className="break-words text-2xl font-bold sm:text-3xl">{activeProject.name}</h3>
               <p className="mt-3 break-words text-mute leading-relaxed">{activeProject.description}</p>
+              {activeProject.role && <p className="mt-3 text-sm text-mute"><span className="font-medium text-ink/80">Role:</span> {activeProject.role}</p>}
             </div>
             <Stack project={activeProject} />
             {activeProject.features.length > 0 && <ul className={`grid gap-2 text-sm text-ink/90 ${activeProject.name === 'SNSU Memory Keeper' ? 'grid-cols-2' : ''}`}>{activeProject.features.map(feature => <li key={feature} className="flex gap-2"><span className="text-accent">▸</span><span className="min-w-0 break-words">{feature}</span></li>)}</ul>}
@@ -212,18 +237,26 @@ export default function Projects() {
             </div>
           </div>
         </article>
-        <button
-          type="button"
-          onClick={() => changeProject(1)}
-          aria-label={`Next project: ${projects[(activeProjectIndex + 1) % projects.length].name}`}
-          className="grid h-11 w-11 shrink-0 place-items-center rounded-full border border-white/15 bg-surface/70 text-2xl text-white/85 shadow-lg transition hover:border-accent/60 hover:bg-surface hover:text-white focus-visible:outline-offset-2 sm:h-14 sm:w-14 sm:text-3xl"
-        >&gt;</button>
+        <div className="flex items-center justify-between gap-3 lg:contents">
+          <button
+            type="button"
+            onClick={() => changeProject(-1)}
+            aria-label={`Previous project: ${projects[(activeProjectIndex - 1 + projects.length) % projects.length].name}`}
+            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-white/15 bg-surface/70 px-4 text-sm text-white/85 shadow-lg transition hover:border-accent/60 hover:bg-surface hover:text-white focus-visible:outline-offset-2 sm:min-h-14 lg:col-start-1 lg:row-start-1 lg:grid lg:h-14 lg:w-14 lg:min-h-0 lg:shrink-0 lg:px-0 lg:place-items-center lg:text-3xl"
+          ><span aria-hidden="true">&lt;</span><span className="lg:hidden">Previous project</span></button>
+          <button
+            type="button"
+            onClick={() => changeProject(1)}
+            aria-label={`Next project: ${projects[(activeProjectIndex + 1) % projects.length].name}`}
+            className="inline-flex min-h-11 items-center justify-center gap-2 rounded-full border border-white/15 bg-surface/70 px-4 text-sm text-white/85 shadow-lg transition hover:border-accent/60 hover:bg-surface hover:text-white focus-visible:outline-offset-2 sm:min-h-14 lg:col-start-3 lg:row-start-1 lg:grid lg:h-14 lg:w-14 lg:min-h-0 lg:shrink-0 lg:px-0 lg:place-items-center lg:text-3xl"
+          ><span className="lg:hidden">Next project</span><span aria-hidden="true">&gt;</span></button>
+        </div>
       </div>
     </Reveal>
     <p className="mt-6 text-center text-sm text-mute" aria-live="polite">Project {activeProjectIndex + 1} of {projects.length}</p>
     <Modal open={open} onClose={() => setOpen(false)} title={activeProject.name}>
       {activeProject.name === 'CCIS-CodeHub' ? <>
-        {activeProject.screenshots[0] && <img src={activeProject.screenshots[0].src} alt={activeProject.screenshots[0].alt} className="aspect-[16/10] w-full rounded-xl border border-line object-cover" />}
+      {activeProject.screenshots[activeScreenshotIndex] && <img src={activeProject.screenshots[activeScreenshotIndex].src} alt={activeProject.screenshots[activeScreenshotIndex].alt} loading="lazy" decoding="async" className="aspect-[16/10] w-full rounded-xl border border-line bg-bg/70 object-contain" />}
         <div className="mt-6"><Stack project={activeProject} /></div>
         <p className="mt-6 text-xs uppercase tracking-wider text-mute">Full thesis title</p><p className="mt-1 leading-relaxed text-ink/90">{activeProject.thesis}</p>
         <div className="mt-8 grid gap-6">{activeProject.details.map(([heading, text]) => <section key={heading}><h4 className="font-semibold">{heading}</h4><DetailCopy text={text} /></section>)}</div>
@@ -241,12 +274,10 @@ export default function Projects() {
         </section>
         <section className="mt-6">
           <h4 className="font-semibold">Screenshots</h4>
-          <div className="mt-3 grid grid-cols-1 gap-4 sm:grid-cols-2">
-            {activeProject.screenshots.map(screenshot => <figure key={screenshot.src} className="min-w-0">
-              <img src={screenshot.src} alt={screenshot.alt} className="aspect-[16/10] w-full rounded-xl border border-line object-contain" />
-              <figcaption className="mt-2 text-xs text-mute">{screenshot.alt}</figcaption>
-            </figure>)}
-          </div>
+          {activeProject.screenshots[activeScreenshotIndex] && <figure className="mt-3 min-w-0">
+            <img src={activeProject.screenshots[activeScreenshotIndex].src} alt={activeProject.screenshots[activeScreenshotIndex].alt} loading="lazy" decoding="async" className="aspect-[16/10] w-full rounded-xl border border-line bg-bg/70 object-contain" />
+            <figcaption className="mt-2 text-xs text-mute">{activeProject.screenshots[activeScreenshotIndex].alt}</figcaption>
+          </figure>}
         </section>
         <div className="mt-8 grid gap-6">{activeProject.details.map(([heading, text]) => <section key={heading}><h4 className="font-semibold">{heading}</h4><DetailCopy text={text} /></section>)}</div>
       </>}

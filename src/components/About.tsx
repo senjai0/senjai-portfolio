@@ -2,7 +2,7 @@ import Section, { Reveal } from './Section'
 import { profile } from '../data'
 import profilePhoto from './Prof-Senjai.png'
 export function ProfileImagePlaceholder() {
-  return <img src={profilePhoto} alt="Portrait of Chinjay D. Arbois" className="mx-auto aspect-square w-full max-w-[200px] rounded-2xl object-cover object-center" />
+  return <img src={profilePhoto} alt="Portrait of Chinjay D. Arbois" loading="lazy" decoding="async" className="mx-auto aspect-square w-full max-w-[200px] rounded-2xl object-cover object-center" />
 }
 const focus = ['Web development', 'Programming', 'Databases', 'Networking', 'AI-assisted development']
 export default function About() {
